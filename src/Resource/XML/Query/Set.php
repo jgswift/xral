@@ -22,52 +22,57 @@ namespace xral\Resource\XML\Query {
                     $value = $arguments[1];
                 }
                 
-                $query->attach(xral\Stream\Query::COMPLETE,function($query,$e)use($name, $value) {
+                $query->attach(xral\Stream\Query::COMPLETE,function($query, $e)use($name, $value) {
                     $result = $e['result']->flatten();
                     
-                    $nameFn = function($element) {
-                        if($element instanceof \DOMElement) {
-                            return $element->tagName;
-                        } elseif($element instanceof \SimpleXMLElement) {
-                            return $element->getName();
-                        }
-                    };
-
-                    $nodeSetter = function(&$node,$recFn,$aggregateName)use($name,$value,$nameFn) {
-                        $nodeName = $nameFn($node);
-                        if($nodeName === $name ||
-                           $aggregateName === $name || 
-                           qtil\StringUtil::endsWith($nodeName, $name)) {
-                            if($node instanceof \SimpleXMLElement) {
-                                $node[0] = $value;
-                            } elseif($node instanceof \DOMNode) {
-                                $node->nodeValue = $value;
-                            }
-                        }
-                        
-                        if($node instanceof \SimpleXMLElement) {
-                            $children = $node->children();
-                        } elseif($node instanceof \DOMNode) {
-                            $children = $node->childNodes;
-                        }
-                        
-                        if(!empty($children)) {
-                            foreach($children as $child) {
-                                $recFn($child,$recFn,$aggregateName.'/'.$nameFn($child));
-                            }
-                        }
-                    };
-
                     foreach($result as $r) {
                         if($r instanceof \DOMNodeList) {
                             foreach($r as $d) {
-                                $nodeSetter($d,$nodeSetter,$d->tagName);
+                                $this->updateNode($d,$d->tagName,$name,$value);
                             }
                         } else {
-                            $nodeSetter($r,$nodeSetter,$r->getName());
+                            $this->updateNode($r,$r->getName(),$name,$value);
                         }
                     }
                 });
+            }
+        }
+        
+        protected function updateNode(&$node, $aggregateName, $name, $value) {
+            $nodeName = $this->getElementName($node);
+            if($nodeName === $name ||
+               $aggregateName === $name || 
+               qtil\StringUtil::endsWith($nodeName, $name)) {
+                if($node instanceof \SimpleXMLElement) {
+                    $node[0] = $value;
+                } elseif($node instanceof \DOMNode) {
+                    $node->nodeValue = $value;
+                }
+            }
+
+            if($node instanceof \SimpleXMLElement) {
+                $children = $node->children();
+            } elseif($node instanceof \DOMNode) {
+                $children = $node->childNodes;
+            }
+
+            if(!empty($children)) {
+                foreach($children as $child) {
+                    $this->updateNode($child,$aggregateName.'/'.$this->getElementName($child),$name,$value);
+                }
+            }
+        }
+        
+        /**
+         * Retrieves element tag name
+         * @param mixed $element
+         * @return string|null
+         */
+        protected function getElementName($element) {
+            if($element instanceof \DOMElement) {
+                return $element->tagName;
+            } elseif($element instanceof \SimpleXMLElement) {
+                return $element->getName();
             }
         }
     }

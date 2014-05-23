@@ -33,7 +33,7 @@ namespace xral\Resource\YML\Filter {
          * @param mixed $input
          * @return mixed
          */
-        function execute(&$input) {
+        function execute($input) {
             $ypath = $this->ypath;
             
             $clauses = explode('|',$ypath);
@@ -46,11 +46,11 @@ namespace xral\Resource\YML\Filter {
             return $results;
         }
         
-        protected function search(&$input,$ypath) {
+        protected function search($input,$ypath) {
             return $this->recursiveSearch($input, explode('/',$ypath), 0);
         }
         
-        protected function recursiveSearch(&$input,$cpaths,$depth) {
+        protected function recursiveSearch($input,$cpaths,$depth) {
             $path = $cpaths[$depth];
                 
             $matches = [];
@@ -68,7 +68,7 @@ namespace xral\Resource\YML\Filter {
             return $results;
         }
         
-        protected function searchResult($k, &$v, $path, &$results, $cpaths, $depth,$clauses) {
+        protected function searchResult($k, $v, $path, &$results, $cpaths, $depth,$clauses) {
             if(qtil\ArrayUtil::isIterable($v) && $k==$path) {
                 if(count($cpaths)-1 > $depth) {
                     foreach($v as $i) {
@@ -86,7 +86,7 @@ namespace xral\Resource\YML\Filter {
             }
         }
         
-        protected function match(&$array,$clauses) {
+        protected function match($array,$clauses) {
             foreach($array as $k=>$v) {
                 foreach($clauses as $name => $match) {
                     if(!isset($v[$name]) ||
