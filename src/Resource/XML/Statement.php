@@ -5,7 +5,7 @@ namespace xral\Resource\XML {
     /**
      * XML query statement boiler-plate class
      */
-    class Statement extends xral\Query\Statement {
+    class Statement extends xral\Stream\Statement {
         
     }
 }

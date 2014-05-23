@@ -16,6 +16,7 @@ namespace xral\Resource\INI\Query {
             
             $args = $this->getArguments();
             
+            $resource = null;
             if(isset($args[0])) {
                 if(is_string($args[0])) {
                     $resource = new qio\File($args[0]);

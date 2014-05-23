@@ -65,7 +65,7 @@ namespace xral\Data {
         
         /**
          * Retrieve view query
-         * @return xral\Interfaces\Query
+         * @return xral\Query
          */
         public function getQuery() {
             return $this->query;
@@ -73,10 +73,10 @@ namespace xral\Data {
         
         /**
          * Update view query
-         * @param Interfaces\Query $query
-         * @return Interfaces\Query
+         * @param xral\Query $query
+         * @return xral\Query
          */
-        public function setQuery(Interfaces\Query $query) {
+        public function setQuery(xral\Query $query) {
             return $this->query = $query;
         }
         

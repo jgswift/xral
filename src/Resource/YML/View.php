@@ -5,7 +5,7 @@ namespace xral\Resource\YML {
     /**
      * YML adapter view boiler-plate class
      */
-    class View extends xral\Query\View {
+    class View extends xral\Stream\View {
         
     }
 }

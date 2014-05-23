@@ -17,6 +17,12 @@ namespace xral {
         private $resource;
         
         /**
+         * Stores query options
+         * @var array
+         */
+        public $data = [];
+        
+        /**
          * Default query constructor
          * @param qio\Resource $resource
          */

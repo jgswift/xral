@@ -5,7 +5,7 @@ namespace xral\Resource\YML {
     /**
      * YML query statement boiler-plate class
      */
-    class Statement extends xral\Query\Statement {
+    class Statement extends xral\Stream\Statement {
         
     }
 }

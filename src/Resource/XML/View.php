@@ -5,7 +5,7 @@ namespace xral\Resource\XML {
     /**
      * XML adapter view boiler-plate class
      */
-    class View extends xral\Query\View {
+    class View extends xral\Stream\View {
         
     }
 }
