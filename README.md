@@ -1,7 +1,7 @@
 xral
 ====
 
-PHP 5.5+ resource abstraction layer
+PHP 5.5+ resource abstraction layer 
 
 [![Build Status](https://travis-ci.org/jgswift/xral.png?branch=master)](https://travis-ci.org/jgswift/xral)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jgswift/xral/badges/quality-score.png?s=09ecf4d598dfdb7d99070e7ba8a7d197abddfae1)](https://scrutinizer-ci.com/g/jgswift/xral/)
