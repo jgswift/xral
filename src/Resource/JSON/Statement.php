@@ -5,7 +5,7 @@ namespace xral\Resource\JSON {
     /**
      * JSON query statement boiler-plate class
      */
-    class Statement extends xral\Query\Statement {
+    class Statement extends xral\Stream\Statement {
         
     }
 }
