@@ -1,16 +1,25 @@
 xral
 ====
 
-PHP 5.5+ resource abstraction layer 
+PHP 5.5+ resource abstraction layer
 
 [![Build Status](https://travis-ci.org/jgswift/xral.png?branch=master)](https://travis-ci.org/jgswift/xral)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jgswift/xral/badges/quality-score.png?s=09ecf4d598dfdb7d99070e7ba8a7d197abddfae1)](https://scrutinizer-ci.com/g/jgswift/xral/)
 
 ## Installation
 
-Install via [composer](https://getcomposer.org/):
+Install via cli using [composer](https://getcomposer.org/):
 ```sh
-php composer.phar require jgswift/xral:dev-master
+php composer.phar require jgswift/xral:0.1.*
+```
+
+Install via composer.json using [composer](https://getcomposer.org/):
+```json
+{
+    "require": {
+        "jgswift/xral": "0.1.*"
+    }
+}
 ```
 
 ## Description
@@ -85,4 +94,25 @@ $query->select('product')
 $result = $query();
 
 var_dump($result); // qinq\Collection [ array, array, ... ]
+```
+
+## JSON
+
+### Query
+
+```php
+<?php
+$query = new JSON\Query();
+
+$query->select(function($person) {
+            return $person['firstName'].' '.$person['lastName']
+      })
+      ->from('people.json')
+      ->where(function($person) {
+            return ($person['money'] > 5000) ? true : false;
+      });
+
+$result = $query();
+
+var_dump($result); // qinq\Collection [ [ 'name' => 'john doe' ], [ 'name' => 'billy bob' ] ]
 ```
