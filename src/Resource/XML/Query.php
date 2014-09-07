@@ -1,6 +1,7 @@
 <?php
 namespace xral\Resource\XML {
     use xral;
+    use qtil;
     
     class Query extends xral\Stream\Query {
         
@@ -65,8 +66,11 @@ namespace xral\Resource\XML {
          */
         function execute() {
             $result = parent::execute();
+            if(qtil\ArrayUtil::isMulti($result->toArray())) {
+                return new \qinq\Collection($result[0]);
+            } 
             
-            return $result->flatten();
+            return $result;
         }
     }
 }

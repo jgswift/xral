@@ -30,7 +30,7 @@ namespace xral\Resource\XML\Query {
                             foreach($r as $d) {
                                 $this->updateNode($d,$d->tagName,$name,$value);
                             }
-                        } else {
+                        } elseif($r instanceof \SimpleXMLElement) {
                             $this->updateNode($r,$r->getName(),$name,$value);
                         }
                     }
