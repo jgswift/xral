@@ -2,7 +2,7 @@
 namespace xral\Resource\JSON\Filter {
     use kfiltr;
     
-    class Parse {
+    class Encoder {
         use kfiltr\Filter;
         
         /**

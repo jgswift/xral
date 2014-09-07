@@ -181,8 +181,10 @@ namespace xral\Stream {
             
             if($this->stream->isWrite()) {
                 $e->attach(observr\Event::DONE,function()use($result,$e) {
-                    $this->setState(self::SAVE, new observr\Event($this,['result' => $e['result']]));
-                    $this->clearState(self::SAVE);
+                    if($this->hasObservers(self::SAVE)) {
+                        $this->setState(self::SAVE, new observr\Event($this,['result' => $e['result']]));
+                        $this->clearState(self::SAVE);
+                    }
                 });
             }
                     

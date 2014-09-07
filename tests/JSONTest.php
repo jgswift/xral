@@ -45,5 +45,38 @@ namespace xral\Tests {
             $this->assertEquals(2,count($result));
             $this->assertEquals('john doe',$result[1]['name']);
         }
+        
+        function testUpdate() {
+            $file = new qio\File(__DIR__.'/Mock/mock.json');
+            
+            $query = new JSON\Query();
+            
+            $query->update($file)
+                  ->set('firstName','bob')
+                  ->where(function($person) {
+                      return ($person['firstName'] == 'billy') ? true : false;
+                  });
+                  
+            $query();
+            
+            $query = new JSON\Query();
+            
+            $query->from($file)->where(function($person) {
+                return ($person['firstName'] == 'bob') ? true : false;
+            });
+            
+            $result = $query->execute();
+            $this->assertEquals(1,count($result));
+            
+            $query = new JSON\Query();
+            
+            $query->update($file)
+                  ->set('firstName','billy')
+                  ->where(function($person) {
+                      return ($person['firstName'] == 'bob') ? true : false;
+                  });
+                  
+            $query();
+        }
     }
 }
