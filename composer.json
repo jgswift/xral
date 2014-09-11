@@ -20,7 +20,7 @@
         "jgswift/kfiltr": "0.1.*",
         "jgswift/qinq": "0.1.*",
         "jgswift/kenum": "0.1.*",
-        "symfony/yaml":"2.3.x-dev"
+        "symfony/yaml":"2.3.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
