@@ -36,13 +36,6 @@ xral queries return ```qinq``` collections to easily enable further object-level
 ## Dependency
 
 * php 5.5+
-* [jgswift/qtil](http://github.com/jgswift/qtil) - general utilities
-* [jgswift/qio](http://github.com/jgswift/qio) - i/o utilities
-* [jgswift/observr](http://github.com/jgswift/observr) - observer pattern implementation
-* [jgswift/kenum](http://github.com/jgswift/kenum) - enumerator implementation
-* [jgswift/qinq](http://github.com/jgswift/qinq) - quasi integrated queries
-* [jgswift/kfiltr](http://github.com/jgswift/kfiltr) - filter, map, and hook implementations
-* [symfony/yaml](http://github.com/symfony/yaml) - enumerator implementation
 
 ## Usage
 
