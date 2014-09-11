@@ -95,7 +95,7 @@ var_dump($result); // qinq\Collection [ DOMElement, DOMElement, ... ]
 #### Update (DOMDocument)
 
 ```php
-$file = new qio\File(;library.xml');
+$file = new qio\File('library.xml');
 
 $query = new XML\DOM();
 
