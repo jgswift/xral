@@ -4,7 +4,6 @@
     "keywords": ["php", "yml", "ini", "xml", "resource", "adapter"],
     "license": "MIT",
     "type": "library",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Josh Swift",
@@ -15,16 +14,17 @@
     ],    
     "require": {
         "php": ">=5.5",
-        "jgswift/qtil": "dev-master",
-        "jgswift/qio": "dev-master",
-        "jgswift/observr": "dev-master",
-        "jgswift/kfiltr": "dev-master",
-        "jgswift/qinq": "dev-master",
-        "jgswift/kenum": "dev-master",
+        "jgswift/qtil": "0.1.*",
+        "jgswift/qio": "0.1.*",
+        "jgswift/observr": "0.1.*",
+        "jgswift/kfiltr": "0.1.*",
+        "jgswift/qinq": "0.1.*",
+        "jgswift/kenum": "0.1.*",
         "symfony/yaml":"2.3.x-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "psr-4": {
