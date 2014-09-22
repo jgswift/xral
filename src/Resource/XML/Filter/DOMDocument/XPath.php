@@ -26,10 +26,11 @@ namespace xral\Resource\XML\Filter\DOMDocument {
                     $dompath->registerNamespace($prefix, $ns);
                 }
                 
-                return $dompath->query($xpath);
+                $nodelist = $dompath->query($xpath);
+                if($nodelist->length > 0) {
+                    return $nodelist;
+                }
             }
-            
-            return new \DOMNodeList();
         }
     }
 }

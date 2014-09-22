@@ -14,7 +14,7 @@ namespace xral\Tests {
             $result = $query();
             
             $resource = $query->getResource();
-            $this->assertEquals(775,strlen($result[0]));
+            $this->assertEquals(775,strlen($result));
             $this->assertInstanceOf('qio\Resource',$resource);
         }
         
@@ -38,17 +38,68 @@ namespace xral\Tests {
                   ->where('authors/author','A guy');
             
             $query();
-            
-            
+
             $query = new XML\Simple();
             
             $query->select('//book')
-                  ->update($file)
+                  ->from($file)
                   ->where('authors/author','Not anyone important');
             
             $result = $query();
             
+            $this->assertInstanceOf('SimpleXMLIterator', $result[0]);
+        }
+        
+        function testSimpleInsertClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.xml');
+            
+            $query = new XML\Simple();
+            
+            $query->select('/library/books')
+                  ->update($file)
+                  ->insert(['book' => [
+                      'name' => 'The Catcher In The Rye',
+                      'authors' => [
+                          'author' => 'J. D. Salinger'
+                      ],
+                      'ISBN' => '0316769533 9780316769532',
+                      'publisher' => 'Amazon',
+                      'pages' => 277
+                  ]]);
+            
+            $query();
+            
+            $query = new XML\Simple();
+            
+            $query->select('//book')
+                  ->from($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $result = $query();
+                        
             $this->assertEquals(1,count($result));
+        }
+        
+        function testSimpleDeleteClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.xml');
+            
+            $query = new XML\Simple();
+            
+            $query->delete('//book')
+                  ->update($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $query();
+            
+            $query = new XML\Simple();
+            
+            $query->select('//book')
+                  ->from($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $result = $query();
+            
+            $this->assertEquals(0,count($result));
         }
         
         function testSimpleSelectClause() {
@@ -168,7 +219,59 @@ namespace xral\Tests {
             
             $result = $query();
             
-            $this->assertEquals(424, strlen($result[0]->textContent));
+            $this->assertEquals(424, strlen($result->textContent));
+        }
+        
+        function testDOMInsertClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.xml');
+            
+            $query = new XML\DOM();
+            
+            $query->select('/library/books')
+                  ->update($file)
+                  ->insert(['book' => [
+                      'name' => 'The Catcher In The Rye',
+                      'authors' => [
+                          'author' => 'J. D. Salinger'
+                      ],
+                      'ISBN' => '0316769533 9780316769532',
+                      'publisher' => 'Amazon',
+                      'pages' => 277
+                  ]]);
+            
+            $query();
+            
+            $query = new XML\DOM();
+            
+            $query->select('//book')
+                  ->from($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $result = $query();
+            
+            $this->assertEquals(1,count($result));
+        }
+        
+        function testDOMDeleteClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.xml');
+            
+            $query = new XML\DOM();
+            
+            $query->delete('//book')
+                  ->update($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $query();
+            
+            $query = new XML\DOM();
+            
+            $query->select('//book')
+                  ->from($file)
+                  ->where('name','The Catcher In The Rye');
+            
+            $result = $query();
+            
+            $this->assertEquals(0,count($result));
         }
         
         function testDOMSelectClause() {

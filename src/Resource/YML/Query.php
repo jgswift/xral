@@ -3,7 +3,6 @@ namespace xral\Resource\YML {
     use xral;
     use qinq;
     use qio;
-    use qtil;
     
     class Query extends xral\Stream\Query {
         /**
@@ -35,6 +34,45 @@ namespace xral\Resource\YML {
                     $this->save($e['result']);
                 });
             }
+        }
+        
+        protected function save($updates) {
+            $dumper = new Filter\Emit(2, 0);
+            
+            foreach($updates as $key => $value) {
+                $value = $updates[$key];
+                if(isset($this->array[$key])) {
+                    if(is_array($value)) {
+                        foreach($value as $k => $v) {
+                            if(is_null($v)) {
+                                 unset($this->array[$key][$k]);
+                            } else {
+                                $this->array[$key][$k] = $v;
+                            }
+                        }
+                    } else {
+                        if(is_null($value)) {
+                            unset($this->array[$key]);
+                        } else {
+                            $this->array[$key] = $value;
+                        }
+                    }
+                }
+            }
+
+            $out = $dumper($this->array);
+            
+            $stream = $this->getStream();
+            
+            if(!$stream->isOpen()) {
+                $stream->open();
+            }
+            
+            $stream->truncate(0);
+            $writer = new qio\File\Writer($stream);
+            $writer->write($out);
+            
+            $stream->close();
         }
         
         /**

@@ -18,6 +18,14 @@ namespace xral\Resource\JSON {
         }
         
         /**
+         * Retrieve local integrated query
+         * @return \qinq\Object\Query
+         */
+        public function getIntegratedQuery() {
+            return $this->query;
+        }
+        
+        /**
          * Updates resource using modified references
          * @param array $updates
          * @throws \InvalidArgumentException
@@ -26,8 +34,15 @@ namespace xral\Resource\JSON {
             if($updates instanceof \qtil\Interfaces\Collection) {
                 $updates = $updates->toArray();
                 foreach($updates as $key => $values) {
+                    if(!array_key_exists($key,$this->array[0])) {
+                        $this->array[0][$key] = [];
+                    }
                     if(array_key_exists($key, $this->array[0])) {
-                        $this->array[0][$key] = $values;
+                        if(is_null($values)) {
+                            unset($this->array[0][$key]);
+                        } else {
+                            $this->array[0][$key] = $values;
+                        }
                     }
                 }
             }
@@ -55,7 +70,7 @@ namespace xral\Resource\JSON {
             parent::assemble();
             
             $this->addFilter(new Filter\Decoder());
-                        
+            
             if(!$this->hasObservers(self::SAVE)) {
                 $this->attach(self::SAVE,function($s,$e) {
                     $this->save($e['result']);
@@ -73,7 +88,6 @@ namespace xral\Resource\JSON {
             $this->array = $collection->toArray();
             
             $this->query->setCollection(new qinq\Collection($collection[0]));
-            
             $result = $this->query->execute();
 
             return $result;

@@ -4,7 +4,7 @@ namespace xral\Tests {
     use xral\Resource\JSON;
     
     class JSONTest extends xralTestCase {
-        function testQuery() {
+        function testJSONQuery() {
             $file = new qio\File(__DIR__.'/Mock/mock.json');
             
             $query = new JSON\Query();
@@ -30,7 +30,7 @@ namespace xral\Tests {
             $this->assertEquals(1,count($result));
         }
         
-        function testSelect() {
+        function testJSONSelect() {
             $file = new qio\File(__DIR__.'/Mock/mock.json');
             
             $query = new JSON\Query();
@@ -46,7 +46,7 @@ namespace xral\Tests {
             $this->assertEquals('john doe',$result[1]['name']);
         }
         
-        function testUpdate() {
+        function testJSONUpdate() {
             $file = new qio\File(__DIR__.'/Mock/mock.json');
             
             $query = new JSON\Query();
@@ -57,7 +57,7 @@ namespace xral\Tests {
                       return ($person['firstName'] == 'billy') ? true : false;
                   });
                   
-            $query();
+            $result = $query();
             
             $query = new JSON\Query();
             
@@ -65,7 +65,7 @@ namespace xral\Tests {
                 return ($person['firstName'] == 'bob') ? true : false;
             });
             
-            $result = $query->execute();
+            $result = $query();
             $this->assertEquals(1,count($result));
             
             $query = new JSON\Query();
@@ -77,6 +77,61 @@ namespace xral\Tests {
                   });
                   
             $query();
+        }
+        
+        function testJSONInsert() {
+            $file = new qio\File(__DIR__.'/Mock/mock.json');
+            
+            $query = new JSON\Query();
+            
+            $query->update($file)
+                  ->insert([
+                      'firstName' => 'jane',
+                      'lastName' => 'doe',
+                      'gender' => 'female',
+                      'money' => 50000
+                  ]);
+                  
+            $query();
+            
+            $query = new JSON\Query();
+            
+            $query->from($file)
+                  ->where('gender','female');
+                  
+            $result = $query();
+            $this->assertEquals(1,count($result));
+        }
+        
+        function testJSONDelete() {
+            $file = new qio\File(__DIR__.'/Mock/mock.json');
+            
+            $query = new JSON\Query();
+            
+            $query->update($file)
+                  ->delete()
+                  ->where('gender','female');
+                  
+            $result = $query();
+            
+            $query = new JSON\Query();
+            
+            $query->from($file)
+                  ->where('gender','female');
+                  
+            $result = $query();
+            $this->assertEquals(0,count($result));
+        }
+        
+        function testJSONMultiSelect() {
+            $file = new qio\File(__DIR__.'/Mock/mock2.json');
+            
+            $query = new JSON\Query();
+            
+            $i = 0;
+            $query->from($file)->select("people");
+            
+            $this->assertEquals(2,count($query()));
         }
     }
 }

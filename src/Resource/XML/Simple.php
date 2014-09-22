@@ -19,10 +19,6 @@ namespace xral\Resource\XML {
                !empty($this['xpath'])) {
                 $this->addFilter(new Filter\SimpleXML\XPath($this));
             }
-            
-            $this->attach(self::SAVE,function($s,$e) {
-                $this->getDocument()->asXml($this->getResource()->getPath());
-            });
         }
     }
 }

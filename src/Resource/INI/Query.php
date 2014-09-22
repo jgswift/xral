@@ -23,7 +23,7 @@ namespace xral\Resource\INI {
             $this->addFilter(new Filter\Parse(true));
             
             $this->addFilter(function($array) {
-                return $this->array = &$array;
+                return $this->array = $array;
             });
             
             if(!$this->hasObservers(self::SAVE)) {
@@ -67,6 +67,8 @@ namespace xral\Resource\INI {
             if(!$stream->isOpen()) {
                 $stream->open();
             }
+            
+            $stream->truncate(0);
             
             $writer = new qio\File\Writer($stream);
             $writer->write($out);

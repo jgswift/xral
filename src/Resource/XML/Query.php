@@ -2,6 +2,7 @@
 namespace xral\Resource\XML {
     use xral;
     use qtil;
+    use qinq;
     
     class Query extends xral\Stream\Query {
         
@@ -57,6 +58,16 @@ namespace xral\Resource\XML {
          */
         protected function assemble() {
             $this['xpath'] = '';
+            
+            $this->attach(self::SAVE,function($s,$e) {
+                $doc = $this->getDocument();
+                if($doc instanceof \DOMDocument) {
+                    $doc->save($this->getResource()->getPath());
+                } elseif($doc instanceof \SimpleXMLElement) {
+                    $doc->asXml($this->getResource()->getPath());
+                }
+            });
+            
             return parent::assemble();
         }
         
@@ -66,11 +77,32 @@ namespace xral\Resource\XML {
          */
         function execute() {
             $result = parent::execute();
-            if(qtil\ArrayUtil::isMulti($result->toArray())) {
-                return new \qinq\Collection($result[0]);
+            if(empty($result)) {
+                return null;
+            }
+            
+            $reduce = function($val) {
+                if(is_scalar($val)) {
+                    return $val;
+                } elseif($val instanceof \DOMDocument) {
+                    return $val;
+                } elseif($val instanceof \SimpleXMLElement) {
+                    return $val;
+                }
+                
+                return $val;
+            };
+            
+            if(empty($this['xpath'])) {
+                return $reduce($result[0]);
             } 
             
-            return $result;
+            if(qtil\ArrayUtil::isMultiObject($result->toArray()) && count($result) == 1) {
+                $val = $result[$result->keys()[0]];
+                return new qinq\Collection($val);
+            }
+            
+            return $result->filter();
         }
     }
 }

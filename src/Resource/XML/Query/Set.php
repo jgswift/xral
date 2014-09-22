@@ -23,17 +23,16 @@ namespace xral\Resource\XML\Query {
                 }
                 
                 $query->attach(xral\Stream\Query::COMPLETE,function($query, $e)use($name, $value) {
-                    $result = $e['result']->flatten();
-                    
-                    foreach($result as $r) {
-                        if($r instanceof \DOMNodeList) {
-                            foreach($r as $d) {
+                    $result = $e['result'];
+                    $result->map(function($item)use($name,$value) {
+                        if($item instanceof \DOMNodeList) {
+                            foreach($item as $d) {
                                 $this->updateNode($d,$d->tagName,$name,$value);
                             }
-                        } elseif($r instanceof \SimpleXMLElement) {
-                            $this->updateNode($r,$r->getName(),$name,$value);
+                        } elseif($item instanceof \SimpleXMLElement) {
+                            $this->updateNode($item,$item->getName(),$name,$value);
                         }
-                    }
+                    });
                 });
             }
         }

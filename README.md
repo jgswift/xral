@@ -48,7 +48,9 @@ xral queries return ```qinq``` collections to easily enable further object-level
 
 ### XML
 
-#### Query (SimpleXML)
+#### SimpleXML
+
+#### Basic
 
 ```php
 $query = new XML\Simple();
@@ -62,7 +64,7 @@ $result = $query();
 var_dump($result); // qinq\Collection [ SimpleXMLElement, SimpleXMLElement, ... ]
 ```
 
-#### Update (SimpleXML)
+#### Update
 
 ```php
 $file = new qio\File('library.xml');
@@ -78,7 +80,45 @@ $query->select('library/books/book')
 $query();
 ```
 
-#### Query (DOMDocument)
+#### Insert
+
+```php
+$file = new qio\File('library.xml');
+
+$query = new XML\Simple();
+            
+$query->select('/library/books')
+      ->update($file)
+      ->insert(['book' => [
+          'name' => 'The Catcher In The Rye',
+          'authors' => [
+              'author' => 'J. D. Salinger'
+          ],
+          'ISBN' => '0316769533 9780316769532',
+          'publisher' => 'Amazon',
+          'pages' => 277
+      ]]);
+
+$query();
+```
+
+#### Delete
+
+```php
+$file = new qio\File('library.xml');
+
+$query = new XML\Simple();
+
+$query->delete('//book')
+      ->update($file)
+      ->where('name','The Catcher In The Rye');
+
+$query();
+```
+
+#### DOMDocument
+
+#### Basic
 
 ```php
 $query = new XML\DOM();
@@ -92,7 +132,7 @@ $result = $query();
 var_dump($result); // qinq\Collection [ DOMElement, DOMElement, ... ]
 ```
 
-#### Update (DOMDocument)
+#### Update
 
 ```php
 $file = new qio\File('library.xml');
@@ -107,9 +147,43 @@ $query->select('library/books/book')
 $query();
 ```
 
+#### Insert
+
+```php
+$file = new qio\File('library.xml');
+
+$query = new XML\DOM();
+            
+$query->select('/library/books')
+      ->update($file)
+      ->insert(['book' => [
+          'name' => 'The Catcher In The Rye',
+          'authors' => [
+              'author' => 'J. D. Salinger'
+          ],
+          'ISBN' => '0316769533 9780316769532',
+          'publisher' => 'Amazon',
+          'pages' => 277
+      ]]);
+
+$query();
+```
+
+#### Delete
+
+```php
+$file = new qio\File('library.xml');
+
+$query->delete('//book')
+      ->update($file)
+      ->where('name','The Catcher In The Rye');
+
+$query();
+```
+
 ### INI
 
-#### Query
+#### Basic
 
 ```php
 $query = new INI\Query();
@@ -138,9 +212,35 @@ $query->update($file)
 $query();
 ```
 
+#### Insert
+
+```php
+$file = new qio\File('config.ini');
+
+$query->update($file)
+      ->section('general')
+      ->insert('name','My Application');
+
+$query();
+```
+
+#### Delete
+
+```php
+$file = new qio\File('config.ini');
+
+$query = new INI\Query();
+            
+$query->update($file)
+      ->section('general')
+      ->delete('name');
+
+$query();
+```
+
 ### YML
 
-#### Query
+#### Basic
 
 ```php
 $query = new YML\Query();
@@ -152,6 +252,48 @@ $query->select('product')
 $result = $query();
 
 var_dump($result); // qinq\Collection [ array, array, ... ]
+```
+
+#### Update
+
+```php
+$query = new YML\Query();
+
+$query->select('product')
+      ->update('invoice.yml')
+      ->where('sku','BB5280R')
+      ->set('quantity',5);
+
+$query();
+```
+
+#### Insert
+
+```php
+$query = new YML\Query();
+            
+$query->select('product')
+      ->update('invoice.yml')
+      ->insert([
+          'sku' => 'BB5280R',
+          'quantity' => 6,
+          'description' => 'Baseball Glove',
+          'price' => 50
+      ]);
+
+$query();
+```
+
+#### Delete
+
+```php
+$query = new YML\Query();
+
+$query->delete('product')
+      ->update('invoice.yml')
+      ->where('sku','BB5280R');
+
+$query();
 ```
 
 ### JSON
@@ -187,6 +329,38 @@ $query->update($file)
       ->where(function($person) {
           return ($person['firstName'] == 'billy') ? true : false;
       });
+
+$query();
+```
+
+#### Insert
+
+```php
+$file = new qio\File('people.json');
+
+$query = new JSON\Query();
+            
+$query->update($file)
+      ->insert([
+          'firstName' => 'jane',
+          'lastName' => 'doe',
+          'gender' => 'female',
+          'money' => 50000
+      ]);
+
+$query();
+```
+
+#### Delete
+
+```php
+$file = new qio\File('people.json');
+
+$query = new JSON\Query();
+            
+$query->update($file)
+      ->delete()
+      ->where('gender','female');
 
 $query();
 ```

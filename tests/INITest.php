@@ -29,6 +29,52 @@ namespace xral\Tests {
             $this->assertEquals(1,count($result));
         }
         
+        function testInsertClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.ini');
+            
+            $query = new INI\Query();
+            
+            $n = 10;
+            
+            $query->update($file)
+                  ->section('foosec')
+                  ->insert('z',$n);
+            
+            $query();
+            
+            $file = new qio\File(__DIR__.'/Mock/mock.ini');
+            $query = new INI\Query();
+            $query->from($file)
+                  ->section('foosec');
+            
+            $result = $query();
+            
+            $this->assertEquals($n,$result['foosec']['z']);
+        }
+        
+        function testDeleteClause() {
+            $file = new qio\File(__DIR__.'/Mock/mock.ini');
+            
+            $query = new INI\Query();
+            
+            $n = 10;
+            
+            $query->update($file)
+                  ->section('foosec')
+                  ->delete('z');
+            
+            $query();
+            
+            $file = new qio\File(__DIR__.'/Mock/mock.ini');
+            $query = new INI\Query();
+            $query->from($file)
+                  ->section('foosec');
+            
+            $result = $query();
+            
+            $this->assertFalse(array_key_exists('z',$result['foosec']));
+        }
+        
         function testWhereSelectClause() {
             $file = new qio\File(__DIR__.'/Mock/mock.ini');
             

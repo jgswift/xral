@@ -34,6 +34,10 @@ namespace xral\Resource\YML\Filter {
          * @return mixed
          */
         function execute($input) {
+            if(is_null($input)) {
+                return;
+            }
+            
             $ypath = $this->ypath;
             
             $clauses = explode('|',$ypath);
@@ -72,17 +76,30 @@ namespace xral\Resource\YML\Filter {
             if(qtil\ArrayUtil::isIterable($v) && $k==$path) {
                 if(count($cpaths)-1 > $depth) {
                     foreach($v as $i) {
-                        $results = array_merge($results,$this->recursiveSearch($i,$cpaths,$depth+1));
+                        $search = $this->recursiveSearch($i,$cpaths,$depth+1);
+                        if(!isset($results[$k])) {
+                            $results[$k] = [];
+                        }
+                        
+                        $keys = array_keys($search);
+                        
+                        foreach($keys as $k2) {
+                            if(!isset($results[$k][$k2])) {
+                                $results[$k][$k2] = [];
+                            }
+                        
+                            $results[$k][$k2] = array_merge($results[$k][$k2], [$search[$k2]]);
+                        }
                     }
                 } else {
                     if(!empty($clauses)) {
-                        $results = array_merge($results,$this->match($v,$clauses));
+                        $results[$k] = $this->match($v,$clauses);
                     } else {
-                        $results = array_merge($results,$v);
+                        $results[$k] = $v;
                     }
                 }
             } elseif($k==$path) {
-                $results[] = $v;
+                $results[$k] = $v;
             }
         }
         

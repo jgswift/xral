@@ -20,10 +20,6 @@ namespace xral\Resource\XML {
                !empty($this['xpath'])) {
                 $this->addFilter(new Filter\DOMDocument\XPath($this));
             }
-            
-            $this->attach(self::SAVE,function($s,$e) {
-                $this->getDocument()->save($this->getResource()->getPath());
-            });
         }
     }
 }

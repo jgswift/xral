@@ -152,16 +152,15 @@ namespace xral\Stream {
             
             $result = [];
             $it = $this->getIterator();
-            
             if($it instanceof \Iterator) {
                 if(!$this->stream->isOpen()) {
                     $this->stream->open();
                 }
 
                 foreach($it as $key => $value) {
-                    $result[] = $this->translate($value);
+                    $result[$key] = $this->translate($value);
                 }
-
+                
                 $this->stream->close();
                 $this->assembled = false;
                 $this->setFilters([]);
@@ -179,8 +178,12 @@ namespace xral\Stream {
             
             $e = new observr\Event($this,['result' => &$result]);
             
+            if(!isset($this->stream)) {
+                throw new xral\Exception('No resource specified');
+            }
+            
             if($this->stream->isWrite()) {
-                $e->attach(observr\Event::DONE,function()use($result,$e) {
+                $this->attach(self::COMPLETE,function()use($result,$e) {
                     if($this->hasObservers(self::SAVE)) {
                         $this->setState(self::SAVE, new observr\Event($this,['result' => $e['result']]));
                         $this->clearState(self::SAVE);

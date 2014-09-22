@@ -1,7 +1,6 @@
 <?php
 namespace xral\Resource\JSON\Query {
     use xral;
-    use qtil;
     
     class Set extends xral\Resource\XML\Statement {
         
@@ -14,7 +13,6 @@ namespace xral\Resource\JSON\Query {
             $arguments = $this->getArguments();
             
             if(count($arguments) > 1) {
-                 
                 $name = $arguments[0];
                     
                 $value = null;
@@ -26,18 +24,15 @@ namespace xral\Resource\JSON\Query {
                 $query->attach(xral\Stream\Query::COMPLETE,function($query,$e)use($name, $value) {
                     $result = $e['result'];
                     
-                    foreach($result as $k => $item) {
+                    $result->map(function($item)use($name,$value) {
                         if(is_array($item) || $item instanceof \ArrayAccess) {
-                            if(isset($item[$name])) {
-                                $item[$name] = $value;
-                                $result[$k][$name] = $value;
-                            }
+                            $item[$name] = $value;
                         } elseif(is_object($item)) {
-                            if(isset($item->$name)) {
-                                $item->$name = $value;
-                            }
+                            $item->$name = $value;
                         }
-                    }
+                        
+                        return $item;
+                    });
                     
                     $e['result'] = $result;
                 });
